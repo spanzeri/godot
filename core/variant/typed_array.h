@@ -86,6 +86,9 @@ struct VariantInternalAccessor<const TypedArray<T> &> {
 		_FORCE_INLINE_ TypedArray(std::initializer_list<Variant> p_init) :                                       \
 				Array(Array(p_init), m_variant_type, StringName(), Variant()) {                                  \
 		}                                                                                                        \
+		_FORCE_INLINE_ TypedArray(std::initializer_list<Variant> p_init) :                                       \
+				Array(Array(p_init), m_variant_type, StringName(), Variant()) {                                  \
+		}                                                                                                        \
 		_FORCE_INLINE_ TypedArray(const Variant &p_variant) :                                                    \
 				TypedArray(Array(p_variant)) {                                                                   \
 		}                                                                                                        \

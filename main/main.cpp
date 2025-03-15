@@ -3090,15 +3090,18 @@ Error Main::setup2(bool p_show_boot_logo) {
 		// certain platform might only support one fullscreen window.
 		if (DisplayServer::get_singleton()->window_get_mode() == DisplayServer::WINDOW_MODE_WINDOWED) {
 			Vector2i current_size = DisplayServer::get_singleton()->window_get_size();
-			Vector2i current_pos = DisplayServer::get_singleton()->window_get_position();
-			int screen = DisplayServer::get_singleton()->window_get_current_screen();
-			Rect2i screen_rect = DisplayServer::get_singleton()->screen_get_usable_rect(screen);
+			Vector2i current_size_with_decorations = DisplayServer::get_singleton()->window_get_size_with_decorations();
+			Vector2i current_pos = DisplayServer::get_singleton()->window_get_position_with_decorations();
 
-			Vector2i adjusted_end = screen_rect.get_end().min(current_pos + current_size);
-			Vector2i adjusted_pos = screen_rect.get_position().max(adjusted_end - current_size);
-			Vector2i adjusted_size = DisplayServer::get_singleton()->window_get_min_size().max(adjusted_end - adjusted_pos);
+			Vector2i decoration_size = current_size_with_decorations - current_size;
 
-			if (current_pos != adjusted_end || current_size != adjusted_size) {
+			Rect2i screen_rect = DisplayServer::get_singleton()->screen_get_usable_rect();
+
+			Vector2i adjusted_end = screen_rect.get_end().min(current_pos + current_size_with_decorations);
+			Vector2i adjusted_pos = screen_rect.get_position().max(adjusted_end - current_size_with_decorations);
+			Vector2i adjusted_size = DisplayServer::get_singleton()->window_get_min_size().max(adjusted_end - adjusted_pos - decoration_size);
+
+			if (current_pos != adjusted_pos || current_size != adjusted_size) {
 				DisplayServer::get_singleton()->window_set_position(adjusted_pos);
 				DisplayServer::get_singleton()->window_set_size(adjusted_size);
 			}
